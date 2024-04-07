@@ -1,0 +1,52 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "args": [],
+            "cwd": "${workspaceFolder:website}",
+            "name": "Debug Website",
+            "program": "${workspaceFolder:website}/.build/debug/Website",
+            "preLaunchTask": "swift: Build Debug Website"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "args": [],
+            "cwd": "${workspaceFolder:website}",
+            "name": "Release Website",
+            "program": "${workspaceFolder:website}/.build/release/Website",
+            "preLaunchTask": "swift: Build Release Website"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "args": [],
+            "cwd": "${workspaceFolder:website}",
+            "name": "Debug app",
+            "program": "${workspaceFolder:website}/.build/debug/app",
+            "preLaunchTask": "swift: Build Debug app"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "args": [],
+            "cwd": "${workspaceFolder:website}",
+            "name": "Release app",
+            "program": "${workspaceFolder:website}/.build/release/app",
+            "preLaunchTask": "swift: Build Release app"
+        }
+    ]
+}
