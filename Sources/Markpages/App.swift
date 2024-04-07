@@ -24,7 +24,7 @@ public struct App {
                     .installPlugin(.ensureAllItemsAreTagged),
                     .addMarkdownFiles(),
                     .generateHTML(withTheme: .basic),
-                    //.createCNAME(website: Constants.website),
+                    .createCNAME(website: Constants.website),
                     .generateSiteMap()
                 ]
             )
