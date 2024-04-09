@@ -22,29 +22,34 @@ extension Theme where Site == ThemeWebsite {
     }
 }
 
-private struct BasicHTMLFactory<Site: Website>: HTMLFactory {
-    func makeIndexHTML(for index: Index,
-                       context: PublishingContext<Site>) throws -> HTML {
+private struct BasicHTMLFactory: HTMLFactory {
+    
+    func makeIndexHTML(
+        for index: Index,
+        context: PublishingContext<ThemeWebsite>
+    ) throws -> HTML {
         HTML(
             .lang(context.site.language),
             .head(for: index, on: context.site),
             .body {
-                SiteHeader(context: context, selectedSelectionID: nil)
+                SiteHeader(context: context, selectedSelectionID: Markpages.SectionID.home)
                 Wrapper(index.body)
                 SiteFooter()
             }
         )
     }
 
-    func makeSectionHTML(for section: Section<Site>,
-                         context: PublishingContext<Site>) throws -> HTML {
+    func makeSectionHTML(
+        for section: Section<ThemeWebsite>,
+        context: PublishingContext<ThemeWebsite>
+    ) throws -> HTML {
         HTML(
             .lang(context.site.language),
             .head(for: section, on: context.site),
             .body {
                 SiteHeader(context: context, selectedSelectionID: section.id)
                 Wrapper {
-                    H1(section.title)
+                    Wrapper(section.body)
                     ItemList(items: section.items, site: context.site)
                 }
                 SiteFooter()
@@ -52,8 +57,10 @@ private struct BasicHTMLFactory<Site: Website>: HTMLFactory {
         )
     }
 
-    func makeItemHTML(for item: Item<Site>,
-                      context: PublishingContext<Site>) throws -> HTML {
+    func makeItemHTML(
+        for item: Item<ThemeWebsite>,
+        context: PublishingContext<ThemeWebsite>
+    ) throws -> HTML {
         HTML(
             .lang(context.site.language),
             .head(for: item, on: context.site),
@@ -74,8 +81,10 @@ private struct BasicHTMLFactory<Site: Website>: HTMLFactory {
         )
     }
 
-    func makePageHTML(for page: Page,
-                      context: PublishingContext<Site>) throws -> HTML {
+    func makePageHTML(
+        for page: Page,
+        context: PublishingContext<ThemeWebsite>
+    ) throws -> HTML {
         HTML(
             .lang(context.site.language),
             .head(for: page, on: context.site),
@@ -87,8 +96,10 @@ private struct BasicHTMLFactory<Site: Website>: HTMLFactory {
         )
     }
 
-    func makeTagListHTML(for page: TagListPage,
-                         context: PublishingContext<Site>) throws -> HTML? {
+    func makeTagListHTML(
+        for page: TagListPage,
+        context: PublishingContext<ThemeWebsite>
+    ) throws -> HTML? {
         HTML(
             .lang(context.site.language),
             .head(for: page, on: context.site),
@@ -111,8 +122,10 @@ private struct BasicHTMLFactory<Site: Website>: HTMLFactory {
         )
     }
 
-    func makeTagDetailsHTML(for page: TagDetailsPage,
-                            context: PublishingContext<Site>) throws -> HTML? {
+    func makeTagDetailsHTML(
+        for page: TagDetailsPage,
+        context: PublishingContext<ThemeWebsite>
+    ) throws -> HTML? {
         HTML(
             .lang(context.site.language),
             .head(for: page, on: context.site),
@@ -155,6 +168,7 @@ private struct Wrapper: ComponentContainer {
 private struct SiteHeader<Site: Website>: Component {
     var context: PublishingContext<Site>
     var selectedSelectionID: Site.SectionID?
+    var contactEmail: String = Constants.contactEmail
 
     var body: Component {
         Header {
@@ -172,14 +186,30 @@ private struct SiteHeader<Site: Website>: Component {
     private var navigation: Component {
         Navigation {
             List(Site.SectionID.allCases) { sectionID in
-                let section = context.sections[sectionID]
-
-                return Link(section.title,
-                    url: section.path.absoluteString
-                )
-                .class(sectionID == selectedSelectionID ? "selected" : "")
+                if sectionID.rawValue == Markpages.SectionID.home.rawValue {
+                  return Link("Home", url: "/")
+                        .class(sectionID.rawValue.lowercased() == selectedSelectionID?.rawValue.lowercased() ? "selected" : "")
+                } else if sectionID.rawValue == Markpages.SectionID.contact.rawValue {
+                    return Email(title: "Contact", email: contactEmail)
+                } else {
+                    let section = context.sections[sectionID]
+                    
+                    return Link(section.title,
+                                url: section.path.absoluteString
+                    )
+                    .class(sectionID == selectedSelectionID ? "selected" : "")
+                }
             }
         }
+    }
+}
+
+private struct Email: Component {
+    var title: String
+    var email: String
+    
+    var body: Component {
+        Link(title, url: URL(string: "mailto:\(email)")!)
     }
 }
 

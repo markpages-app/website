@@ -6,8 +6,11 @@ import Plot
 struct Markpages: Publish.Website {
     enum SectionID: String, WebsiteSectionID {
         // Add the sections that you want your website to contain here:
+        case home
         case about
         case terms
+        case privacy
+        case contact
     }
 
     struct ItemMetadata: WebsiteItemMetadata {

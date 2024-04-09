@@ -12,4 +12,5 @@ enum Constants {
     static let website = "markpages.app"
     static let websiteUrl = "https://" + website
     static let githubUrl = "https://github.com/markpages-app"
+    static let contactEmail = "contact@intech-consulting.fr"
 }
